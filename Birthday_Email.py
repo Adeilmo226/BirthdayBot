@@ -11,7 +11,7 @@ password = os.environ.get("EMAIL_PASSWORD")
 # If there is a match, call send_email function. 
 def check_birthday(): 
     current_date = datetime.datetime.now().strftime('%Y-%m-%d') # current date is in (Year-Month-Date) format
-    csv_file_path = '/Users/adeilmo226/scripts/Personal_Project/Birthdays.csv'
+    csv_file_path = ''
     with open(csv_file_path, 'r') as file: # open csv file and read it.  
         reader = csv.DictReader(file) 
         for row in reader: #iterates through file
@@ -24,8 +24,8 @@ def check_birthday():
 
 
 def send_email(to_address, subject, message):
-    from_address = "adeiltherealdeal@gmail.com"  # Your email
-    password = "dvvh mhhk mefc fvar"   # Your email password or app password
+    from_address = ""  # Your email
+    password = ""   # Your email password or app password
 
     # Create a MIMEText message
     html = f"""\
@@ -61,14 +61,3 @@ if __name__ == "__main__":
     check_birthday()
     
 
-
-# cron scheduler is a time based scheduler in Unix-like Operating systems. 
-
-# path for Birthday_Email.py -> /Users/adeilmo226/scripts/Personal_Project/Birthday_Email.py 
-
-# path for python3 -> /Library/Frameworks/Python.framework/Versions/3.10/bin/python3 
-
-# crontab -l -> to use current cron jobs
-# crontab -e -> to edit cron jobs
-# 00 08 * * * /Library/Frameworks/Python.framework/Versions/3.10/bin/python3 /Users/adeilmo226/scripts/Personal_Project/Birthday_Email.py > /Users/adeilmo226/scripts/Personal_Project/cron.log 2>&1
-# Press escape then add :wq and enter to save and exit
