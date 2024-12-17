@@ -1,38 +1,43 @@
-import csv # This module is used to read from and write to CSV files in a Pythonic way.
-import datetime # This module is used to work with dates and times. It's used here to get the current date.
-import smtplib # This module defines an SMTP client session object that can be used to send mail to any internet machine with an SMTP or ESMTP listener daemon.
-from email.mime.text import MIMEText # Used for creating messages that are plain text
-from email.mime.multipart import MIMEMultipart # Useful for creating emails that could have multiple parts, like text and attachments.
-from email.mime.image import MIMEImage # embedding image within email
+import csv
+import datetime
+import smtplib
 import os
-password = os.environ.get("EMAIL_PASSWORD")
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
-# Gets todays current date, opens csv file and compares current date with all birthdays in csv file
-# If there is a match, call send_email function. 
-def check_birthday(): 
-    current_date = datetime.datetime.now().strftime('%Y-%m-%d') # current date is in (Year-Month-Date) format
-    csv_file_path = ''
-    with open(csv_file_path, 'r') as file: # open csv file and read it.  
-        reader = csv.DictReader(file) 
-        for row in reader: #iterates through file
-            name, birthday, contact = row['name'], row['birthday'], row['contact']
-            if current_date[5:] == birthday[5:]:  # Match MM-DD, excludes year (5 characters with dash (YYYY-) 
-                message = "Happy Birthday, " + name + "! Have a great day! "
-                send_email(contact, "Happy Birthday!", message) 
-                
+# Function to check birthdays and send emails if there is a match
+def check_birthday():
+    current_date = datetime.datetime.now().strftime('%Y-%m-%d')  # Current date in YYYY-MM-DD format
+    csv_file_path = "birthdays.csv"  # Path to CSV file
 
+    try:
+        with open(csv_file_path, 'r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                name, birthday, contact = row['name'], row['birthday'], row['contact']
+                if current_date[5:] == birthday[5:]:  # Match MM-DD, excludes year
+                    message = f"Happy Birthday, {name}! Have a great day! 🎉"
+                    send_email(contact, "Happy Birthday!", message)
+    except FileNotFoundError:
+        print(f"Error: The file '{csv_file_path}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
-
+# Function to send an email
 def send_email(to_address, subject, message):
-    from_address = ""  # Your email
-    password = ""   # Your email password or app password
+    from_address = os.environ.get("EMAIL_ADDRESS")  # Email address from environment variables
+    password = os.environ.get("EMAIL_PASSWORD")  # Email password from environment variables
 
-    # Create a MIMEText message
+    if not from_address or not password:
+        print("Error: Email credentials not set in environment variables.")
+        return
+
+    # Create an HTML email with a fun image
     html = f"""\
     <html>
       <body>
         <p>{message}</p>
-        <img src="https://i.pinimg.com/736x/29/3c/d1/293cd1bc2cbe30d7dcf0d935fd27835f.jpg" alt="Happy Birthday!"> 
+        <img src="https://i.pinimg.com/736x/29/3c/d1/293cd1bc2cbe30d7dcf0d935fd27835f.jpg" alt="Happy Birthday!">
       </body>
     </html>
     """
@@ -42,22 +47,17 @@ def send_email(to_address, subject, message):
     msg['Subject'] = subject
     msg.attach(MIMEText(html, 'html'))
 
-    # Server configuration (example with Gmail)
-    smtp_server = "smtp.gmail.com"
-    smtp_port = 587  # For TLS
-
-    # Connect to the SMTP server and send the email
-    server = smtplib.SMTP(smtp_server, smtp_port)
-    server.starttls()  # Upgrade the connection to secure
-    server.login(from_address, password)
-    server.send_message(msg)
-    server.quit()
-    print("Email was sent")
-    
-
-
+    # Send email using SMTP
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(from_address, password)
+        server.send_message(msg)
+        print(f"Email sent to {to_address}")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+    finally:
+        server.quit()
 
 if __name__ == "__main__":
     check_birthday()
-    
-
