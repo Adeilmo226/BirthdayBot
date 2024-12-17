@@ -1,11 +1,48 @@
-Personal Project: 
+## Project Overview
 
-I came up with this idea due to the fact I do not have the best memory and always forget the birthdays of my friends and family. So I decided to try to write a script that automatically sends a personalized email to a person on their birthday. Orginally I wanted to send a text message, but after doing some research, this proved to be too difficult and beyond my scope of knowledge. Additionaly, there already existed a module that I could import called smtplib that defines an SMTP client session object that can be used to send mail to any internet machine with an SMTP. 
+I created Birthday Bot because I often forget the birthdays of my friends and family. To solve this, I wrote a Python script that sends personalized emails on their birthdays.  
 
+Originally, I wanted the program to send text messages, but after research, I realized that email was more practical and within my knowledge scope. Using the `smtplib` module in Python, I was able to send emails securely through my Gmail account.
 
-First, I created a csv file that clearly listed the names, birthdates and emails of my friends and family members that I would like to send an email to. I used a csv file because it would be easy to parse through when making my script. I also had to create an app password for my gmail to be able to login to my account thorugh my program. Then I wrote a function that compared the current date to the date of each birthday on the csv file, if the dates matched, an email would be sent accordingly. I personalized the email by including their first and last name, as well as a funny Mr.Bean image. 
+---
 
-To automate this task, I used the cron schduler on my MacOS. It was my first time using a cron schdeler, so this proved to be the most difficult part of the project. I had been able to get my program to work manually by running the program on the terminal, but not automatically. My program was in my documents folder, which led to some security issues so I moved the program to my home directory. Instead of reading from my Birthdays.csv file directly (which has worked when running the program locally), I learned that I had to inculde the path of csv file instead when using cron, in order for the program to work, since cron does not know the location of any files that are being called or opened. 
+## How It Works
 
+1. **Birthday List**:  
+   I store all birthdays, names, and email addresses in a CSV file for easy access and parsing.  
 
-Overall, this project proved to be pretty challenging but very rewarding in the end. I learned how to automate my program which was very cool and it was really fun being able to implement an idea I had into an actual program. 
+2. **Sending Personalized Emails**:  
+   The script checks the current date and compares it to birthdays in the file. If a match is found, an email is sent with a personalized message, including their name and a fun Mr. Bean birthday image. I also included a link that users can click on to blow out candles on an interactive birthday cake. 
+
+3. **Automation with GitHub Actions**:  
+   Initially, I used a cron job, but I discovered it only works when my laptop is turned on. To fully automate the process, I set up GitHub Actions to run the script daily, ensuring the emails are sent even when my laptop is offline.
+
+---
+
+## Challenges and Learnings
+
+### Challenges
+- Setting up secure email automation using Gmail with app passwords.  
+- Automating the script reliably so it runs every day without manual intervention.  
+- Debugging issues related to SMTP email configuration.
+
+### Learnings
+This project was a rewarding experience that taught me:  
+- How to automate tasks using **GitHub Actions**.  
+- How to securely send emails in Python using `smtplib`.  
+- The importance of automating processes to make them reliable and efficient.  
+
+---
+
+## Outcome
+
+The final result is a fully automated bot that:  
+- Sends a personalized email to my friends and family on their birthdays.  
+- Runs daily using GitHub Actions for complete automation.  
+- Includes a fun and cheerful birthday message with an interactive birthday cake. 
+
+---
+
+## Links
+
+- **Interactive Birthday Cake**: [Interactive Birthday Cake](https://adeilmo226.github.io/interactive-birthday-cake/)
